@@ -39,7 +39,7 @@ def exact_synthesize(U):
     
     # Am left with a matrix of the form U(1, 0, k) which we can match to T^j
     if V.k%10 != 5:
-        Circuit.join("T",(V.k)%10)
+        Circuit.join("T",(V.k + 5)%10)
     
     return Circuit
 
@@ -60,11 +60,11 @@ def exact_synthesize_weave(U):
 
         V = F*(T**min)*V
         g = V.mu()
-        if min != 0:
-            Circuit.join("T", 10 - min)
+        Circuit.join("T", 10 - min)
         Circuit.join("F", 1)
         f_parity = not f_parity
     
+    # print(f_parity)
     # check if |u| = 1
     if V.u*V.u.star() == Zomega(1,0,0,0):
         # factor out phase so that u = 1
@@ -102,7 +102,7 @@ def exact_synthesize_weave(U):
         # find k
         k = V.k
 
-        #print((j,i,k))
+        # print((i,j,k))
 
         # now V = w^j T^(-i-j) F T^(-i-j+k)
         if not f_parity:

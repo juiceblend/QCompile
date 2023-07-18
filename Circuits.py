@@ -23,7 +23,7 @@ class FTCircuit:
         if len(self.circuit) == 0:
             return False
         
-        if self.circuit[0][1] == "F":
+        if self.circuit[0][0] == "F":
             self.circuit = self.circuit[1:]
             return True
 
@@ -67,6 +67,29 @@ class FTCircuit:
                     braid.add(1,1)
 
         return braid
+    
+    def toWeave(self):
+        braid = Braid()
+        braid.addPhase(cmath.phase(self.phase.value()))
+
+        l = len(self.circuit)
+
+        for i in range(int(l/4)):
+            pow = self.circuit[l-1-4*i][1]
+            braid.addPhase(2*pow*math.pi/5)
+            braid.add(1,3*pow)
+
+            sandwich_pow = self.circuit[l-3-4*i][1]
+            braid.addPhase(2*sandwich_pow*math.pi/5)
+            braid.add(2,3*sandwich_pow)
+        
+        if l%4 == 1:
+            pow = self.circuit[0][1]
+            braid.addPhase(2*pow*math.pi/5)
+            braid.add(1,3*pow)
+    
+        return braid
+
     
     def numerical_approximate(self):
         T = np.array([
