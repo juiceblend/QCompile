@@ -51,23 +51,53 @@ class FTCircuit:
         braid.addPhase(cmath.phase(self.phase.value()))
 
         l = len(self.circuit)
+        i = 0
 
-        for i in range(l):
+        while i < l:
             if self.circuit[l-1-i][0] == "T":
                 pow = self.circuit[l-1-i][1]
                 braid.addPhase(2*pow*math.pi/5)
                 braid.add(1,3*pow)
 
+                i = i+1
+
             elif self.circuit[l-1-i][0] == "F":
+                
                 pow = self.circuit[l-1-i][1]
-                braid.addPhase(4*pow*math.pi/5)
-                for i in range(pow):
-                    braid.add(1,1)
-                    braid.add(2,1)
-                    braid.add(1,1)
+
+                # case which shouldn't happen
+                if pow != 1:
+                    braid.addPhase(4*pow*math.pi/5)
+                    for j in range(pow):
+                        braid.add(1,1)
+                        braid.add(2,1)
+                        braid.add(1,1)
+                    
+                    i = i+1
+                    print("wrong power of F")
+                    continue
+
+
+                # check if a power of sigma_2 can be implemented
+                if l-3-i >= 0:
+                    if self.circuit[l-3-i][0] == "F" and self.circuit[l-2-i][0] == "T":
+                        pow = self.circuit[l-2-i][1]
+                        braid.addPhase(2*pow*math.pi/5)
+                        braid.add(2,3*pow)
+
+                        i = i+3
+                        continue
+                
+                braid.addPhase(4*math.pi/5)
+                braid.add(1,1)
+                braid.add(2,1)
+                braid.add(1,1)
+                i = i+1
 
         return braid
     
+    # implemented into toBraid
+    '''
     def toWeave(self):
         braid = Braid()
         braid.addPhase(cmath.phase(self.phase.value()))
@@ -89,6 +119,7 @@ class FTCircuit:
             braid.add(1,3*pow)
     
         return braid
+    '''
 
     
     def numerical_approximate(self):

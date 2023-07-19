@@ -204,6 +204,10 @@ class Ztau:
     def value(self):
         tau = 0.5 * (math.sqrt(5) - 1)
         return self.a + self.b * tau
+    
+    def approx_value(self):
+        tau_approx = 0.618
+        return self.a + self.b * tau_approx
 
     def __str__(self):
         return "({0} + {1}\u03C4)".format(self.a, self.b)
