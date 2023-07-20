@@ -215,7 +215,51 @@ class Braid:
             result = np.matmul(result, np.linalg.matrix_power(bases[elt[0]-1], elt[1]))
         
         return cmath.exp(1j * self.phase) * result
+    
+    def individual_winding(self):
+        winding_1 = 0
+        winding_2 = 0
+        for term in self.braid:
+            if term[0] == 1:
+                winding_1 = winding_1 + term[1]
+            else:
+                winding_2 = winding_2 + term[1]
+        
+        return (winding_1%10, winding_2%10)
 
+    def evaluate_braid_string(braid_string):
+        sigma1 = np.array([
+            [cmath.exp(1.2j * math.pi), 0],
+            [0, cmath.exp(0.6j * math.pi)]
+        ])
+
+        tau = 0.5 * (math.sqrt(5) - 1)
+
+        F = np.array([
+            [tau, math.sqrt(tau)],
+            [math.sqrt(tau), -tau]
+        ])
+
+        sigma2 = np.matmul(F, np.matmul(sigma1, F))
+
+        bases = [sigma1, sigma2]
+
+        result = np.identity(2)
+        for elt in braid_string:
+            result = np.matmul(result, bases[int(elt)-1])
+        
+        return result
+    
+    def evaluate_individual_winding(braid_string):
+        winding_1 = 0
+        winding_2 = 0
+        for elt in braid_string:
+            if int(elt) == 1:
+                winding_1 = winding_1 + 1
+            else:
+                winding_2 = winding_2 + 1
+        
+        return (winding_1%10, winding_2%10)
     
     def __str__(self):
         '''

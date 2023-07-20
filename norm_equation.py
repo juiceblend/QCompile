@@ -99,6 +99,7 @@ def easy_factor(xi):
             factors = [(Ztau(int(math.sqrt(c/5)), 0),2), (Ztau(5,0),1)]
         else:
             factors = [(xi, 1)]
+            return factors # equation won't be solveable
     
     n = xi_1.N()
     if n%5 == 0:
