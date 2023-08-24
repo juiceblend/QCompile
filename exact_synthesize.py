@@ -20,9 +20,11 @@ def exact_synthesize(U):
     Circuit = FTCircuit()
     while g.value() >= 2: 
         min = 0
+        min_value = V.j_mu(min).value()
         for j in range(0,10):
-            if (F*(T**j)*V).mu().value() < (F*(T**min)*V).mu().value():
+            if V.j_mu(j).value() < min_value:
                 min = j
+                min_value = V.j_mu(min).value()
 
         V = F*(T**min)*V
         g = V.mu()

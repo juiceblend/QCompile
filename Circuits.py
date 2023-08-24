@@ -250,6 +250,95 @@ class Braid:
         
         return result
     
+    def braid_string_to_tikz(braid_string):
+        tikz_string = ""
+
+        for elt in braid_string:
+            if elt == '1':
+                tikz_string += 's_1 '
+            elif elt == '2':
+                tikz_string += 's_2 '
+        
+        return tikz_string
+    
+    def shorten_braid_string(braid_string):
+        total_length = 0
+        new_braid = ""
+
+        curr = braid_string[0]
+        count = 0
+        for elt in braid_string:
+            if elt == curr:
+                count += 1
+            else:
+                if count <= 5:
+                    new_braid += curr * count
+                    total_length += count
+                else:
+                    if curr == '1':
+                        new_braid += '3' * (10 - count)
+                    elif curr == '2':
+                        new_braid += '4' * (10 - count)
+                    
+                    total_length += 10 - count
+                
+                count = 1
+                curr = elt
+        
+        if count <= 5:
+            new_braid += curr * count
+            total_length += count
+        else:
+            if curr == '1':
+                new_braid += '3' * (10 - count)
+            elif curr == '2':
+                new_braid += '4' * (10 - count)
+            
+            total_length += 10 - count
+                    
+        return (total_length, new_braid)
+
+    def braid_string_to_latex(braid_string):
+        output = ""
+
+        curr = braid_string[0]
+        count = 0
+        
+        for elt in braid_string:
+            if elt == curr:
+                count += 1
+            else:
+                if curr == '1':
+                    output += f"\\sigma_1^{count} "
+
+                elif curr == '2':
+                    output += f"\\sigma_2^{count} "
+
+                elif curr == '3':
+                    output += f"\\sigma_1^{{-{count}}} "
+
+                elif curr == '4':
+                    output += f"\\sigma_2^{{-{count}}} "
+                
+                count = 1
+                curr = elt
+
+        if curr == '1':
+            output += f"\\sigma_1^{count} "
+
+        elif curr == '2':
+            output += f"\\sigma_2^{count} "
+
+        elif curr == '3':
+            output += f"\\sigma_1^\{{-{count}}} "
+
+        elif curr == '4':
+            output += f"\\sigma_2^{{-{count}}} "
+        
+
+        return output
+
+    
     def evaluate_individual_winding(braid_string):
         winding_1 = 0
         winding_2 = 0
